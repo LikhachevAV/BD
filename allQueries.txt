@@ -1,8 +1,8 @@
-1. CREATE database checklist;
+SHOW DATABASES;
 
-2. SHOW DATABASES;
-###################
-3.
+CREATE database checklist;
+USE checklist;
+####CREATE TABLES
 CREATE TABLE project
 (
   id SERIAL,
@@ -10,9 +10,6 @@ CREATE TABLE project
   PRIMARY KEY (id)
 );
 
-3.1 ALTER TABLE project CHANGE
- project_id id SERIAL; -- rename column
-4.
 CREATE TABLE function (
     id SERIAL,
     name VARCHAR(255),
@@ -22,7 +19,63 @@ CREATE TABLE function (
         REFERENCES project (id)
         ON DELETE CASCADE
 );
-###################
+
+CREATE TABLE release_version (
+    id SERIAL,
+    version VARCHAR(255),
+    project_id BIGINT UNSIGNED,
+    PRIMARY KEY (id),
+    FOREIGN KEY (project_id)
+        REFERENCES project (id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE function_check (
+    id SERIAL,
+    name VARCHAR(255),
+    function_id BIGINT UNSIGNED,
+    PRIMARY KEY (id),
+    FOREIGN KEY (function_id)
+        REFERENCES function (id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE task (
+    id SERIAL,
+    name VARCHAR(255),
+    check_id BIGINT UNSIGNED,
+    PRIMARY KEY (id),
+    FOREIGN KEY (check_id)
+        REFERENCES function_check (id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE check_status (
+    id SERIAL,
+    name VARCHAR(255),
+    check_id BIGINT UNSIGNED,
+    PRIMARY KEY (id),
+    FOREIGN KEY (check_id)
+        REFERENCES function_check (id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE check_date (
+    id SERIAL,
+    check_date DATE,
+    check_id BIGINT UNSIGNED,
+    PRIMARY KEY (id),
+    FOREIGN KEY (check_id)
+        REFERENCES function_check (id)
+        ON DELETE CASCADE
+);
+
+###INSERT DATA
 INSERT INTO project (name) VALUES
     ('Extranet'),('Booking form'),('Channel manager'),
     ('WebPMS'),('Express'),('Rate shopper');
+	
+INSERT INTO release_version (version) VALUES
+    ('0.8.0'),('0.9.0'),('1.0'),
+    ('1.1.0'),('1.2.0'),('1.2.1');
+    
