@@ -5,7 +5,7 @@ USE checklist;
 ####CREATE TABLES
 CREATE TABLE project
 (
-  id SERIAL,
+  project_id SERIAL,
   name VARCHAR(255),
   PRIMARY KEY (id)
 );
