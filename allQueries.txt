@@ -3,71 +3,92 @@ SHOW DATABASES;
 CREATE database checklist;
 USE checklist;
 ####CREATE TABLES
+
+CREATE TABLE person
+(
+  person_id SERIAL,
+  person_name VARCHAR(255),
+  person_surname VARCHAR(255),
+  person_fathername VARCHAR(255),
+  person_role ENUM('pm' , 'dev', 'qa'),
+  PRIMARY KEY (person_id)
+);
+
 CREATE TABLE project
 (
   project_id SERIAL,
-  name VARCHAR(255),
-  PRIMARY KEY (id)
+  project_name VARCHAR(255),
+  project_pm_person_id BIGINT UNSIGNED,
+  project_dev_person_id BIGINT UNSIGNED,
+  project_qa_person_id BIGINT UNSIGNED,
+  PRIMARY KEY (project_id)
 );
 
-CREATE TABLE function (
-    id SERIAL,
-    name VARCHAR(255),
+CREATE TABLE feature (
+    feature_id SERIAL,
+    feature_name VARCHAR(255),
     project_id BIGINT UNSIGNED,
-    PRIMARY KEY (id),
+    PRIMARY KEY (feature_id),
     FOREIGN KEY (project_id)
-        REFERENCES project (id)
+        REFERENCES project (project_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE feature_check (
+	feature_check_id SERIAL,
+	feature_id BIGINT UNSIGNED,
+	feature_check_description TEXT,
+	feature_check_date DATE,
+	feature_check_status ENUM('ok', 'fail', 'skip'),
+	feature_checked_by_person_id BIGINT UNSIGNED,
+	test_case_id BIGINT UNSIGNED,
+	PRIMARY KEY (feature_check_id),
+	FOREIGN KEY (feature_id)
+	  REFERENCES feature (feature_id)
+);
+
+CREATE TABLE test_case (
+  test_case_id UNSIGNED,
+  test_case_name VARCHAR(255),
+  feature_check_id (BIGINT UNSIGNED),
+  PRIMARY KEY (test_case_id),
+  FOREIGN KEY (feature_check_id)
+    REFERENCES feature_check (feature_check_id)
+);
+
+CREATE TABLE test_case_step (
+  test_case_step_id,
+  test_case_step_description,
+  test_case_step_expected_result,
+  test_case_id,
+  PRIMARY KEY (test_case_step_id),
+  FOREIGN KEY (test_case_id)
+    REFERENCES test_case (test_case_id)
+);
+
+CREATE TABLE task (
+    task_id SERIAL,
+    task_name VARCHAR(255),
+	task_description,
+	creator_person_id,
+	developer_person_id,
+	qa_person_id,
+    feature_check_id BIGINT UNSIGNED,
+    PRIMARY KEY (task_id),
+    FOREIGN KEY (feature_check_id)
+        REFERENCES function_check (feature_check_id)
         ON DELETE CASCADE
 );
 
 CREATE TABLE release_version (
-    id SERIAL,
-    version VARCHAR(255),
-    project_id BIGINT UNSIGNED,
-    PRIMARY KEY (id),
-    FOREIGN KEY (project_id)
-        REFERENCES project (id)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE function_check (
-    id SERIAL,
-    name VARCHAR(255),
-    function_id BIGINT UNSIGNED,
-    PRIMARY KEY (id),
-    FOREIGN KEY (function_id)
-        REFERENCES function (id)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE task (
-    id SERIAL,
-    name VARCHAR(255),
-    check_id BIGINT UNSIGNED,
-    PRIMARY KEY (id),
-    FOREIGN KEY (check_id)
-        REFERENCES function_check (id)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE check_status (
-    id SERIAL,
-    name VARCHAR(255),
-    check_id BIGINT UNSIGNED,
-    PRIMARY KEY (id),
-    FOREIGN KEY (check_id)
-        REFERENCES function_check (id)
-        ON DELETE CASCADE
-);
-
-CREATE TABLE check_date (
-    id SERIAL,
-    check_date DATE,
-    check_id BIGINT UNSIGNED,
-    PRIMARY KEY (id),
-    FOREIGN KEY (check_id)
-        REFERENCES function_check (id)
-        ON DELETE CASCADE
+  release_id BIGINT UNSIGNED,
+  release_version VARCHAR(255),
+  release_date DATE,
+  task_id BIGINT UNSIGNED,
+  project_id BIGINT UNSIGNED,
+  PRIMARY KEY (release_version_id),
+  FOREIGN KEY (project_id)
+    REFERENCES project (project_id)
 );
 
 ###INSERT DATA
