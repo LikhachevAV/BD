@@ -10,7 +10,7 @@ CREATE TABLE person
   person_name VARCHAR(255),
   person_surname VARCHAR(255),
   person_fathername VARCHAR(255),
-  person_role ENUM('pm' , 'dev', 'qa'),
+  person_role ENUM('pm', 'dev', 'qa'),
   PRIMARY KEY (person_id)
 );
 
@@ -21,17 +21,27 @@ CREATE TABLE project
   project_pm_person_id BIGINT UNSIGNED,
   project_dev_person_id BIGINT UNSIGNED,
   project_qa_person_id BIGINT UNSIGNED,
-  PRIMARY KEY (project_id)
+  PRIMARY KEY (project_id),
+  FOREIGN KEY (project_pm_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL,
+  FOREIGN KEY (project_dev_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL,
+  FOREIGN KEY (project_dev_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL
 );
 
 CREATE TABLE feature (
-    feature_id SERIAL,
-    feature_name VARCHAR(255),
-    project_id BIGINT UNSIGNED,
-    PRIMARY KEY (feature_id),
-    FOREIGN KEY (project_id)
-        REFERENCES project (project_id)
-        ON DELETE CASCADE
+  feature_id SERIAL,
+  feature_name VARCHAR(255),
+  feature_deskription TEXT,
+  project_id BIGINT UNSIGNED,
+  PRIMARY KEY (feature_id),
+  FOREIGN KEY (project_id)
+    REFERENCES project (project_id)
+    ON DELETE CASCADE
 );
 
 CREATE TABLE feature_check (
@@ -41,62 +51,120 @@ CREATE TABLE feature_check (
 	feature_check_date DATE,
 	feature_check_status ENUM('ok', 'fail', 'skip'),
 	feature_checked_by_person_id BIGINT UNSIGNED,
-	test_case_id BIGINT UNSIGNED,
 	PRIMARY KEY (feature_check_id),
 	FOREIGN KEY (feature_id)
-	  REFERENCES feature (feature_id)
+	  REFERENCES feature (feature_id),
+	FOREIGN KEY (feature_checked_by_person_id)
+	  REFERENCES person (person_id)
+	  ON DELETE SET NULL
 );
 
 CREATE TABLE test_case (
-  test_case_id UNSIGNED,
+  test_case_id SERIAL,
   test_case_name VARCHAR(255),
-  feature_check_id (BIGINT UNSIGNED),
+  feature_check_id BIGINT UNSIGNED,
   PRIMARY KEY (test_case_id),
   FOREIGN KEY (feature_check_id)
     REFERENCES feature_check (feature_check_id)
+	ON DELETE CASCADE
 );
 
 CREATE TABLE test_case_step (
-  test_case_step_id,
-  test_case_step_description,
-  test_case_step_expected_result,
-  test_case_id,
+  test_case_step_id SERIAL,
+  test_case_step_description TEXT,
+  test_case_step_expected_result VARCHAR(255),
+  test_case_id BIGINT UNSIGNED,
   PRIMARY KEY (test_case_step_id),
   FOREIGN KEY (test_case_id)
     REFERENCES test_case (test_case_id)
+	ON DELETE CASCADE
 );
 
 CREATE TABLE task (
-    task_id SERIAL,
-    task_name VARCHAR(255),
-	task_description,
-	creator_person_id,
-	developer_person_id,
-	qa_person_id,
-    feature_check_id BIGINT UNSIGNED,
-    PRIMARY KEY (task_id),
-    FOREIGN KEY (feature_check_id)
-        REFERENCES function_check (feature_check_id)
-        ON DELETE CASCADE
+  task_id SERIAL,
+  task_name VARCHAR(255),
+  task_description TEXT,
+  creator_person_id BIGINT UNSIGNED,
+  developer_person_id BIGINT UNSIGNED,
+  qa_person_id BIGINT UNSIGNED,
+  feature_check_id BIGINT UNSIGNED,
+  PRIMARY KEY (task_id),
+  FOREIGN KEY (feature_check_id)
+    REFERENCES feature_check (feature_check_id)
+    ON DELETE SET NULL,
+  FOREIGN KEY (creator_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL,
+  FOREIGN KEY (developer_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL,
+  FOREIGN KEY (qa_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL  
 );
 
 CREATE TABLE release_version (
-  release_id BIGINT UNSIGNED,
-  release_version VARCHAR(255),
-  release_date DATE,
+  release_version_id SERIAL,
+  release_version_version VARCHAR(255),
+  release_version_date DATE,
   task_id BIGINT UNSIGNED,
   project_id BIGINT UNSIGNED,
   PRIMARY KEY (release_version_id),
   FOREIGN KEY (project_id)
     REFERENCES project (project_id)
+	ON DELETE CASCADE,
+  FOREIGN KEY (task_id)
+    REFERENCES task (task_id)
+    ON DELETE SET NULL	
 );
 
 ###INSERT DATA
-INSERT INTO project (name) VALUES
-    ('Extranet'),('Booking form'),('Channel manager'),
-    ('WebPMS'),('Express'),('Rate shopper');
+INSERT INTO person (person_surname, person_name, person_fathername, person_role) VALUES
+  ("Иванов", "Иван", "Иванович", "pm"),
+  ("Сергеев", "Сергей", "Сергеевич", "pm"),
+  ("Трифонов", "Трифон", "Трифонович", "dev"),
+  ("Малова", "Мария", "Михайловна", "qa"),
+  ("Петров", "Петр", "Петрович"),
+  ("Иванов", "Леонид", "Сергеевич"),
+  ("Ленин", "Владимир", "Ильич"),
+  ("Цекало", "Александр", "Евгеньевич"),
+  ("Милявская", "Лолита", "Марковна"),
+  ("Антонов", "Юрий", "Михайлович");
+
+INSERT INTO project (project_name, project_pm_person_id, project_dev_person_id, project_qa_person_id) VALUES
+  ("Booking form", 1, 3, 4),
+  ("Extranet", 2, 3, 4),
+  ("Channel manager", 2, 5, 4);
 	
-INSERT INTO release_version (version) VALUES
-    ('0.8.0'),('0.9.0'),('1.0'),
-    ('1.1.0'),('1.2.0'),('1.2.1');
-    
+INSERT INTO release_version (release_version_version, release_version_date) VALUES
+  ("0.8.0", "2016-03-14"),
+  ("0.8.1", "2016-03-15"),
+  ("0.9.1", "2016-12-12"),
+  ("1.0.0", "2017-01-01");
+  
+INSERT INTO feature (project_id, feature_name) values
+  (1, "Бронитрование номера"),
+  (1, "Промокод"),
+  (1, "Оплата банковской картой"),
+  (1, "СМС-подтверждение"),
+  (2, "Категории номеров"),
+  (2, "Квота номеров"),
+  (2, "Описание гостиницы"),
+  (2, "email-уведомления о брони"),
+  (3, "Отправка обновлений"),
+  (3, "Доставка броней"),
+  (1, "Тарифный план");
+
+INSERT INTO feature_check (feature_id, feature_check_description) VALUES
+  (1, "Бронирование по промокоду"),
+  (1, "Бонирование с оплатой банковской картой"),
+  (1, "Пролучение СМС по брони"),
+  (1, "Бронирование по разным тарифным планам"),
+  (5, "Создание категории номеров"),
+  (5, "Удаление категории номеров"),
+  (5, "Изменение названия категории номеров"),
+  (6, "Изменение значения квоты номеров"),
+  (9, "Отправка обновлений при изменении квоты вручную"),
+  (9, "Отправка обновлений при пересчете квоты автоматически при бронировани с формы бронирования"),
+  (9, "Отправка обновлений при пересчете квоты автоматически при прохождении брони из канала"),
+  (10, "Доставка брони из канала");
