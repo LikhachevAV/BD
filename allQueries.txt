@@ -1,5 +1,3 @@
-SHOW DATABASES;
-
 CREATE database checklist;
 USE checklist;
 ####CREATE TABLES
@@ -59,27 +57,6 @@ CREATE TABLE feature_check (
 	  ON DELETE SET NULL
 );
 
-CREATE TABLE test_case (
-  test_case_id SERIAL,
-  test_case_name VARCHAR(255),
-  feature_check_id BIGINT UNSIGNED,
-  PRIMARY KEY (test_case_id),
-  FOREIGN KEY (feature_check_id)
-    REFERENCES feature_check (feature_check_id)
-	ON DELETE CASCADE
-);
-
-CREATE TABLE test_case_step (
-  test_case_step_id SERIAL,
-  test_case_step_description TEXT,
-  test_case_step_expected_result VARCHAR(255),
-  test_case_id BIGINT UNSIGNED,
-  PRIMARY KEY (test_case_step_id),
-  FOREIGN KEY (test_case_id)
-    REFERENCES test_case (test_case_id)
-	ON DELETE CASCADE
-);
-
 CREATE TABLE task (
   task_id SERIAL,
   task_name VARCHAR(255),
@@ -118,6 +95,37 @@ CREATE TABLE release_version (
     ON DELETE SET NULL	
 );
 
+CREATE TABLE feature_check_step (
+  feature_check_step_id SERIAL,
+  feature_check_step_description TEXT,
+  feature_check_step_expected_result VARCHAR(255),
+  feature_check_id BIGINT UNSIGNED,
+  PRIMARY KEY (feature_check_step_id),
+  FOREIGN KEY (feature_check_id)
+    REFERENCES feature_check (feature_check_id)
+	ON DELETE CASCADE
+);
+
+CREATE TABLE parameter_set (
+  parameter_set_id SERIAL,
+  feature_check_id BIGINT UNSIGNED,
+  PRIMARY KEY (parameter_set_id),
+  FOREIGN KEY (feature_check_id)
+    REFERENCES feature_check (feature_check_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE parameter (
+  parameter_id SERIAL,
+  parameter_set_id BIGINT UNSIGNED,
+  parameter_name VARCHAR(255),
+  parameter_value VARCHAR(255),
+  PRIMARY KEY (parameter_id),
+  FOREIGN KEY (parameter_set_id)
+    REFERENCES parameter_set (parameter_set_id)
+    ON DELETE CASCADE
+);
+
 ###INSERT DATA
 INSERT INTO person (person_surname, person_name, person_fathername, person_role) VALUES
   ("Иванов", "Иван", "Иванович", "pm"),
@@ -154,34 +162,22 @@ INSERT INTO release_version (release_version_version) VALUES
   ("1.0"),
   ("1.1");
   
-INSERT INTO feature (project_id, feature_name) values
-  (1, "Бронитрование номера"),
-  (1, "Промокод"),
-  (1, "Оплата банковской картой"),
-  (1, "СМС-подтверждение"),
-  (2, "Категории номеров"),
-  (2, "Квота номеров"),
-  (2, "Описание гостиницы"),
-  (2, "email-уведомления о брони"),
-  (3, "Отправка обновлений"),
-  (3, "Доставка броней"),
-  (1, "Тарифный план");
+INSERT INTO feature (feature_name) VALUES
+  ("Отправка сообщения"),
+  ("Загрузка изображения"),
+  ("Сбор объявлений из разных источников"),
+  ("Добавление нового события"),
+  ("Загрузка одного файлов"),
+  ("Отправка запроса http-запроса на сервер"),
+  ("Добавление товара в корзину"),
+  ("Изменение геометрических размеров");
 
-INSERT INTO feature_check (feature_id, feature_check_description) VALUES
-  (1, "Бронирование по промокоду"),
-  (1, "Бонирование с оплатой банковской картой"),
-  (1, "Пролучение СМС по брони"),
-  (1, "Бронирование по разным тарифным планам"),
-  (5, "Создание категории номеров"),
-  (5, "Удаление категории номеров"),
-  (5, "Изменение названия категории номеров"),
-  (6, "Изменение значения квоты номеров"),
-  (9, "Отправка обновлений при изменении квоты вручную"),
-  (9, "Отправка обновлений при пересчете квоты автоматически при бронировани с формы бронирования"),
-  (9, "Отправка обновлений при пересчете квоты автоматически при прохождении брони из канала"),
-  (10, "Доставка брони из канала");
+INSERT INTO feature_check (feature_check_description) VALUES
+  ("Отправка сообщения человеку из списка контактов"),
+  ("Отправка ");
+  
 
   
 ###DELETE DATA
 ###Удалить все элементы таблицы
-DELETE FROM project where project.project_name LIKE "%";
+#DELETE FROM project where project.project_name LIKE "%";
