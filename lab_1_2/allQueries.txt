@@ -1,0 +1,201 @@
+CREATE database checklist;
+USE checklist;
+####CREATE TABLES
+
+CREATE TABLE person
+(
+  person_id SERIAL,
+  person_name VARCHAR(255),
+  person_surname VARCHAR(255),
+  person_fathername VARCHAR(255),
+  person_role ENUM('pm', 'dev', 'qa'),
+  PRIMARY KEY (person_id)
+);
+
+CREATE TABLE project
+(
+  project_id SERIAL,
+  project_name VARCHAR(255),
+  project_pm_person_id BIGINT UNSIGNED,
+  project_dev_person_id BIGINT UNSIGNED,
+  project_qa_person_id BIGINT UNSIGNED,
+  PRIMARY KEY (project_id),
+  FOREIGN KEY (project_pm_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL,
+  FOREIGN KEY (project_dev_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL,
+  FOREIGN KEY (project_dev_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL
+);
+
+CREATE TABLE feature (
+  feature_id SERIAL,
+  feature_name VARCHAR(255),
+  feature_deskription TEXT,
+  project_id BIGINT UNSIGNED,
+  PRIMARY KEY (feature_id),
+  FOREIGN KEY (project_id)
+    REFERENCES project (project_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE test_case (
+	test_case_id SERIAL,
+	feature_id BIGINT UNSIGNED,
+	test_case_description TEXT,
+	test_case_date DATE,
+	test_case_status ENUM('ok', 'fail', 'skip'),
+	test_caseed_by_person_id BIGINT UNSIGNED,
+	PRIMARY KEY (test_case_id),
+	FOREIGN KEY (feature_id)
+	  REFERENCES feature (feature_id),
+	FOREIGN KEY (test_caseed_by_person_id)
+	  REFERENCES person (person_id)
+	  ON DELETE SET NULL
+);
+
+CREATE TABLE task (
+  task_id SERIAL,
+  task_name VARCHAR(255),
+  task_description TEXT,
+  creator_person_id BIGINT UNSIGNED,
+  developer_person_id BIGINT UNSIGNED,
+  qa_person_id BIGINT UNSIGNED,
+  test_case_id BIGINT UNSIGNED,
+  PRIMARY KEY (task_id),
+  FOREIGN KEY (test_case_id)
+    REFERENCES test_case (test_case_id)
+    ON DELETE SET NULL,
+  FOREIGN KEY (creator_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL,
+  FOREIGN KEY (developer_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL,
+  FOREIGN KEY (qa_person_id)
+    REFERENCES person (person_id)
+	ON DELETE SET NULL  
+);
+
+CREATE TABLE release_version (
+  release_version_id SERIAL,
+  release_version_version VARCHAR(255),
+  release_version_date DATE,
+  task_id BIGINT UNSIGNED,
+  project_id BIGINT UNSIGNED,
+  PRIMARY KEY (release_version_id),
+  FOREIGN KEY (project_id)
+    REFERENCES project (project_id)
+	ON DELETE CASCADE,
+  FOREIGN KEY (task_id)
+    REFERENCES task (task_id)
+    ON DELETE SET NULL	
+);
+
+CREATE TABLE test_case_step (
+  test_case_step_id SERIAL,
+  test_case_step_description TEXT,
+  test_case_step_expected_result VARCHAR(255),
+  test_case_id BIGINT UNSIGNED,
+  PRIMARY KEY (test_case_step_id),
+  FOREIGN KEY (test_case_id)
+    REFERENCES test_case (test_case_id)
+	ON DELETE CASCADE
+);
+
+CREATE TABLE parameter_set (
+  parameter_set_id SERIAL,
+  test_case_id BIGINT UNSIGNED,
+  PRIMARY KEY (parameter_set_id),
+  FOREIGN KEY (test_case_id)
+    REFERENCES test_case (test_case_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE parameter (
+  parameter_id SERIAL,
+  parameter_set_id BIGINT UNSIGNED,
+  parameter_name VARCHAR(255),
+  parameter_value VARCHAR(255),
+  PRIMARY KEY (parameter_id),
+  FOREIGN KEY (parameter_set_id)
+    REFERENCES parameter_set (parameter_set_id)
+    ON DELETE CASCADE
+);
+
+###INSERT DATA
+INSERT INTO person (person_surname, person_name, person_fathername, person_role) VALUES
+  ("Иванов", "Иван", "Иванович", "pm"),
+  ("Сергеев", "Сергей", "Сергеевич", "pm"),
+  ("Трифонов", "Трифон", "Трифонович", "dev"),
+  ("Малова", "Мария", "Михайловна", "qa"),
+  ("Петров", "Петр", "Петрович", "dev"),
+  ("Иванов", "Леонид", "Сергеевич", "dev"),
+  ("Ленин", "Владимир", "Ильич", "dev"),
+  ("Цекало", "Александр", "Евгеньевич", "qa"),
+  ("Милявская", "Лолита", "Марковна", "dev"),
+  ("Антонов", "Юрий", "Михайлович", "pm");
+
+INSERT INTO project (project_name) VALUES
+  ("Социальная сеть"),
+  ("Графический редактор"),
+  ("Агрегатор объявлений"),
+  ("Планировщик"),
+  ("Облачное хранилище файлов"),
+  ("Монитор состояния веб-сервиса"),
+  ("Интернет-магазин"),
+  ("Онлайн-конструктор мебели");
+	
+INSERT INTO release_version (release_version_version) VALUES
+  ("0.1"),
+  ("0.2"),
+  ("0.3"),
+  ("0.4"),
+  ("0.5"),
+  ("0.6"),
+  ("0.7"),
+  ("0.8"),
+  ("0.9"),
+  ("1.0"),
+  ("1.1");
+  
+INSERT INTO feature (feature_name) VALUES
+  ("Отправка сообщения"),
+  ("Список контактов"),
+  ("Загрузка изображения"),
+  ("Сбор объявлений из разных источников"),
+  ("Добавление нового события"),
+  ("Загрузка одного файлов"),
+  ("Отправка запроса http-запроса на сервер"),
+  ("Добавление товара в корзину"),
+  ("Изменение геометрических размеров");
+
+INSERT INTO test_case (test_case_description) VALUES
+  ("Отправка сообщения человеку из списка контактов"),
+  ("Отправка сообщения человеку не из списка контактов"),
+  ("Установить новый контакт"),
+  ("Удалить контакт"),
+  ("Добавить источник объявленицй"),
+  ("Удаление источника объявлений"),
+  ("Сортировка объявлений по источникам"),
+  ("Загрузка изображения в редактор");
+  
+INSERT INTO test_case_step (test_case_step_description) VALUES
+("Авторизоваться"),
+("Найти контакт"),
+("Добавить его в список контактов"),
+("Проверить, что в списке контактов появился новый контакт"),
+("Отправить контакту сообщение"),
+("Найти отправленное сообщение в списке отправленных"),
+("Удалить контакт"),
+("Проверить, что контакт удалился из списка"),
+("Отправить ему сообщение"),
+("Проверить, что сообщение отправлено");
+
+  
+###DELETE DATA
+###Удалить все элементы таблицы
+#DELETE FROM project where project.project_name LIKE "%";
