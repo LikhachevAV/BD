@@ -1,5 +1,6 @@
 CREATE database uefa_euro_2012;
 USE uefa_euro_2012;
+
 ####CREATE TABLES
 
 CREATE TABLE team (
@@ -39,3 +40,23 @@ CREATE TABLE goal (
     REFERENCES team (team_id)
 	ON DELETE CASCADE
 );
+
+###INSERT DATA
+
+INSERT INTO team (team_code, team_name, coach) VALUES
+  ("POL", "Poland", "Franciszek Smuda"),
+  ("RUS", "Russia", "Dick Advocaat"),
+  ("CZE", "Czech Republic", "Michal Bilek"),
+  ("GRE", "Greece", "Fernando Santos");
+  
+INSERT INTO game (match_date, stadium, team1, team2) VALUES
+  ("2012-06-08", "National Stadium, Warsaw", "1", "4"),
+  ("2012-06-08", "Stadion Miejski, Wroclaw", "2", "3"),
+  ("2012-06-12", "Stadion Miejski, Wroclaw", "4", "3"),
+  ("2012-06-12", "National Stadium, Warsaw", "1", "2");
+  
+  INSERT INTO goal (match_id, team_id, player, match_time) VALUES
+  ("1", "1", "Robert Lewandowski", "17"),
+  ("1", "4", "Dimitris Salpingidis", "51"),
+  ("2", "2", "Alan Dzagoev", "15"),
+  ("1", "2", "Roman Pavlyuchenko", "82");
