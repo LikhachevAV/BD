@@ -91,3 +91,8 @@ SELECT goal.player, team.team_id, game.stadium, game.match_date
 
 #3
 # Найти названия команд для всех встреч, в которых забивал игрок с именем Mario
+SELECT team.team_name AS team1_name, team2.team_name AS team2_name
+FROM game LEFT JOIN team ON game.team1 = team.team_id
+  RIGHT JOIN team AS team2 ON game.team2 = team2.team_id
+  LEFT JOIN goal ON goal.team_id = team.team_id
+WHERE goal.player LIKE("Mario%");
