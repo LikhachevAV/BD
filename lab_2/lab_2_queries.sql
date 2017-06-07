@@ -44,20 +44,179 @@ CREATE TABLE goal (
 
 INSERT INTO team (team_code, team_name, coach) VALUES
   ("POL", "Poland", "Franciszek Smuda"),
-  ("RUS", "Russia", "Dick Advocaat"),
-  ("CZE", "Czech Republic", "Michal Bilek"),
   ("GRE", "Greece", "Fernando Santos"),
-  ("GER", "Germany", "Yoakhim Lev"),
-  ("POR", "Portugal", "Paulu Bentu"),
-  ("DEN", "Denmark", "Morten Olsen");
-  
+  ("RUS", "Russia", "Dick Advocaat"),
+  ("CZE", "Czech", "Republic Michal Bílek"),
+  ("NED", "Netherlands", "Bert van Marwijk"),
+  ("DEN", "Denmark", "Morten Olsen"),
+  ("GER", "Germany", "Joachim Löw"),
+  ("POR", "Portugal", "Paulo Bento"),
+  ("ESP", "Spain", "Vicente del Bosque"),
+  ("ITA", "Italy", "Cesare Prandelli"),
+  ("IRL", "Ireland", "Giovanni Trapattoni"),
+  ("CRO", "Croatia", "Slaven Bilić"),
+  ("FRA", "France", "Laurent Blanc"),
+  ("ENG", "England", "Roy Hodgson"),
+  ("UKR", "Ukraine", "Oleh Blokhin"),
+  ("SWE", "Sweden", "Erik Hamrén");
+
+
 INSERT INTO game (match_date, stadium, team1, team2) VALUES
-  ("2012-06-08", "National Stadium, Warsaw", "1", "4"),
-  ("2012-06-08", "Stadion Miejski, Wroclaw", "2", "3"),
-  ("2012-06-12", "Stadion Miejski, Wroclaw", "4", "3"),
-  ("2012-06-12", "National Stadium, Warsaw", "1", "2"),
-  ("2012-06-09", "Arena Lvov, Lvov", "5", "6"),
-  ("2012-06-17", "Arena Lvov, Lvov", "7", "5");
+  ("2012-06-08", 
+  "Stadion Narodowy, Warsaw (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "POL"), 
+  (SELECT team.team_id FROM team WHERE team_code = "GRE")),
+
+  ("2012-06-08", 
+  "Municipal Stadium Wroclaw, Wroclaw (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "RUS"), 
+  (SELECT team.team_id FROM team WHERE team_code = "CZE")),
+
+  ("2012-06-09", 
+  "Metalist Stadium, Kharkiv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "NED"), 
+  (SELECT team.team_id FROM team WHERE team_code = "DEN")),
+			
+  ("2012-06-09", 
+  "Arena Lviv, Lviv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "GER"), 
+  (SELECT team.team_id FROM team WHERE team_code = "POR")),
+
+  ("2012-06-10", 
+  "Arena Gdansk, Gdansk (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "ESP"), 
+  (SELECT team.team_id FROM team WHERE team_code = "ITA")),
+	
+  ("2012-06-10", 
+  "Municipal Stadium Poznan, Poznan (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "IRL"), 
+  (SELECT team.team_id FROM team WHERE team_code = "CRO")),
+	
+  ("2012-06-11", 
+  "Donbass Arena, Donetsk (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "FRA"), 
+  (SELECT team.team_id FROM team WHERE team_code = "ENG")),
+  
+  ("2012-06-11", 
+  "NSK Olimpiyskyi, Kyiv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "UKR"), 
+  (SELECT team.team_id FROM team WHERE team_code = "SWE")),  
+  
+  ("2012-06-12", 
+  "Municipal Stadium Wroclaw, Wroclaw (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "GRE"), 
+  (SELECT team.team_id FROM team WHERE team_code = "CZE")),
+
+  ("2012-06-12", 
+  "Stadion Narodowy, Warsaw (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "POL"), 
+  (SELECT team.team_id FROM team WHERE team_code = "RUS")),
+  
+  ("2012-06-13", 
+  "Arena Lviv, Lviv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "DEN"), 
+  (SELECT team.team_id FROM team WHERE team_code = "POR")),  
+
+  ("2012-06-13", 
+  "Metalist Stadium, Kharkiv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "NED"), 
+  (SELECT team.team_id FROM team WHERE team_code = "GER")), 	
+  
+  ("2012-06-14", 
+  "Municipal Stadium Poznan, Poznan (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "ITA"), 
+  (SELECT team.team_id FROM team WHERE team_code = "CRO")),  
+
+  ("2012-06-14", 
+  "Arena Gdansk, Gdansk (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "ESP"), 
+  (SELECT team.team_id FROM team WHERE team_code = "IRL")),  
+		
+  ("2012-06-15", 
+  "Donbass Arena, Donetsk (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "UKR"), 
+  (SELECT team.team_id FROM team WHERE team_code = "FRA")),	
+
+  ("2012-06-15", 
+  "NSK Olimpiyskyi, Kyiv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "SWE"), 
+  (SELECT team.team_id FROM team WHERE team_code = "ENG")),		
+
+  ("2012-06-16", 
+  "Stadion Narodowy, Warsaw (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "GRE"), 
+  (SELECT team.team_id FROM team WHERE team_code = "RUS")),					
+
+  ("2012-06-16", 
+  "Municipal Stadium Wroclaw, Wroclaw (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "CZE"), 
+  (SELECT team.team_id FROM team WHERE team_code = "POL")),
+  
+  ("2012-06-17", 
+  "Metalist Stadium, Kharkiv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "POR"), 
+  (SELECT team.team_id FROM team WHERE team_code = "NED")),
+
+  ("2012-06-17", 
+  "Arena Lviv, Lviv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "DEN"), 
+  (SELECT team.team_id FROM team WHERE team_code = "GER")), 
+
+  ("2012-06-18", 
+  "Arena Gdansk, Gdansk (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "CRO"), 
+  (SELECT team.team_id FROM team WHERE team_code = "ESP")), 
+  
+  ("2012-06-18", 
+  "Municipal Stadium Poznan, Poznan (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "ITA"), 
+  (SELECT team.team_id FROM team WHERE team_code = "IRL")),
+
+  ("2012-06-19", 
+  "NSK Olimpiyskyi, Kyiv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "SWE"), 
+  (SELECT team.team_id FROM team WHERE team_code = "FRA")),
+
+  ("2012-06-19", 
+  "Donbass Arena, Donetsk (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "ENG"), 
+  (SELECT team.team_id FROM team WHERE team_code = "UKR")),		
+
+  ("2012-06-21", 
+  "Stadion Narodowy, Warsaw (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "CZE"), 
+  (SELECT team.team_id FROM team WHERE team_code = "POR")),	
+
+  ("2012-06-22", 
+  "Arena Gdansk, Gdansk (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "GER"), 
+  (SELECT team.team_id FROM team WHERE team_code = "GRE")), 
+
+  ("2012-06-23", 
+  "Donbass Arena, Donetsk (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "ESP"), 
+  (SELECT team.team_id FROM team WHERE team_code = "FRA")), 
+  
+  ("2012-06-24", 
+  "NSK Olimpiyskyi, Kyiv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "ENG"), 
+  (SELECT team.team_id FROM team WHERE team_code = "ITA")),
+
+  ("2012-06-27", 
+  "Donbass Arena, Donetsk (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "POR"), 
+  (SELECT team.team_id FROM team WHERE team_code = "ESP")),
+
+  ("2012-06-28", 
+  "Stadion Narodowy, Warsaw (POL)", 
+  (SELECT team.team_id FROM team WHERE team_code = "GER"), 
+  (SELECT team.team_id FROM team WHERE team_code = "ITA")), 
+ 
+  ("2012-07-01", 
+  "NSK Olimpiyskyi, Kyiv (UKR)", 
+  (SELECT team.team_id FROM team WHERE team_code = "ESP"), 
+
+  (SELECT team.team_id FROM team WHERE team_code = "ITA"));
   
   
   
