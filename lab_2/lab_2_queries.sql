@@ -219,16 +219,55 @@ INSERT INTO game (match_date, stadium, team1, team2) VALUES
   (SELECT team.team_id FROM team WHERE team_code = "ITA"));
   
   
-  
 INSERT INTO goal (match_id, team_id, player, match_time) VALUES
-  ("1", "1", "Robert Lewandowski", "17"),
-  ("1", "4", "Dimitris Salpingidis", "51"),
-  ("2", "2", "Alan Dzagoev", "15"),
-  ("1", "2", "Roman Pavlyuchenko", "82"),
-  ("5", "5", "Mario Gomes", "72"),
-  ("6", "7", "Kron-Deli", "24"),
-  ("6", "5", "Lukas Podolski", "19"),
-  ("6", "5", "Lars Bender", "80");
+  #("MATCH_ID", (SELECT team_id FROM team WHERE team_code = "TEAM_CODE"), "PLAYER_NAME", "MATCH_TIME");
+  #1
+  ("1", (SELECT team_id FROM team WHERE team_code = "POL"), "Robert Lewandowski", "17"),
+  ("1", (SELECT team_id FROM team WHERE team_code = "GRE"), "Dimitris Salpingidis", "51"),
+  #2
+  ("2", (SELECT team_id FROM team WHERE team_code = "RUS"), "Alan Dzagoev", "15"),
+  ("2", (SELECT team_id FROM team WHERE team_code = "RUS"), "Roman Shirokov", "24"),
+  ("2", (SELECT team_id FROM team WHERE team_code = "CZE"), "Václav Pilař", "52"),
+  ("2", (SELECT team_id FROM team WHERE team_code = "RUS"), "Alan Dzagoev", "79"),
+  ("2", (SELECT team_id FROM team WHERE team_code = "RUS"), "Roman Pavlyuchenko", "82"),
+  #3
+  ("3", (SELECT team_id FROM team WHERE team_code = "DEN"), "Michael Krohn-Dehli", "24"),
+  #4
+  ("4", (SELECT team_id FROM team WHERE team_code = "GER"), "Mario Gomez", "72"),
+  #5
+  ("5", (SELECT team_id FROM team WHERE team_code = "ITA"), "Antonio Di Natale", "61"),
+  ("5", (SELECT team_id FROM team WHERE team_code = "ESP"), "Cesc Fàbregas", "64"),
+  #6
+  ("6", (SELECT team_id FROM team WHERE team_code = "CRO"), "Mario Mandžukić", "3"),
+  ("6", (SELECT team_id FROM team WHERE team_code = "IRL"), "Sean St Ledger", "19"),
+  ("6", (SELECT team_id FROM team WHERE team_code = "CRO"), "Nikica Jelavić", "43"),
+  ("6", (SELECT team_id FROM team WHERE team_code = "CRO"), "Mario Mandžukić", "49"),
+  #7
+  ("7", (SELECT team_id FROM team WHERE team_code = "ENG"), "Joleon Lescott", "30"),
+  ("7", (SELECT team_id FROM team WHERE team_code = "FRA"), "Joleon Lescott", "39"),
+  #8
+  ("8", (SELECT team_id FROM team WHERE team_code = "SWE"), "Zlatan Ibrahimović", "52"),
+  ("8", (SELECT team_id FROM team WHERE team_code = "UKR"), "Andriy Shevchenko", "55"),
+  ("8", (SELECT team_id FROM team WHERE team_code = "UKR"), "Andriy Shevchenko", "62"),
+  #9
+  ("9", (SELECT team_id FROM team WHERE team_code = "CZE"), "Petr Jiráček", "3"),
+  ("9", (SELECT team_id FROM team WHERE team_code = "CZE"), "Václav Pilař", "6"),
+  ("9", (SELECT team_id FROM team WHERE team_code = "GRE"), "Fanis Gekas", "53"),
+  #10
+  ("10", (SELECT team_id FROM team WHERE team_code = "RUS"), "Alan Dzagoev", "37"),
+  ("10", (SELECT team_id FROM team WHERE team_code = "POl"), "Jakub Błaszczykowski", "57"),
+  #11
+  ("11", (SELECT team_id FROM team WHERE team_code = "POR"), "Pepe", "24"),
+  ("11", (SELECT team_id FROM team WHERE team_code = "POR"), "Hélder Postiga", "36"),
+  ("11", (SELECT team_id FROM team WHERE team_code = "DEN"), "Nicklas Bendtner", "41"),
+  ("11", (SELECT team_id FROM team WHERE team_code = "DEN"), "Nicklas Bendtner", "80"),
+  ("11", (SELECT team_id FROM team WHERE team_code = "POR"), "Silvestre Varela", "87"),
+  #12
+  ("12", (SELECT team_id FROM team WHERE team_code = "GER"), "Mario Gomez", "24"),
+  ("12", (SELECT team_id FROM team WHERE team_code = "GER"), "Mario Gomez", "38"),
+  ("12", (SELECT team_id FROM team WHERE team_code = "NED"), "Robin van Persie", "73")
+  
+  /*("MATCH_ID", (SELECT team_id FROM team WHERE team_code = "TEAM_CODE"), "PLAYER_NAME", "MATCH_TIME")*/;
   
 ###SELECTS:
 #1
