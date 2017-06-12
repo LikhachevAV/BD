@@ -28,9 +28,15 @@ SELECT goal.player, team.team_id, team.coach, goal.match_time FROM goal
   LEFT JOIN team ON goal.team_id = team.team_id
   WHERE match_time <= 10 ORDER BY goal.match_time;
   
-#5.	Перечислить все даты матчей и названия команд, в которых FernandoSantosбыл тренерому одной из команд
+#5.	Перечислить все даты матчей и названия команд, в которых Fernando Santos был тренерому одной из команд
+SELECT game.match_date, team_f.team_name, team_s.team_name FROM game 
+  LEFT JOIN team AS team_f ON game.team1 = team_f.team_id 
+  LEFT JOIN team AS team_s ON game.team2 = team_s.team_id 
+WHERE team_f.coach = "Fernando Santos" OR team_s.coach = "Fernando Santos"
+ORDER BY match_date;
+
 #6.	Перечислить всех игроков, которые забивали голы на стадионе «NationalStadium, Warsaw»
 #7.	Найти имена всех игроков, которые забили гол в ворота Германии
 #8.	Найти общее количество забитых мячей для каждой команды (с указанием имени команды)
 #9.	Найти количество мячей, забитых на каждом стадионе с указанием названия стадиона
-#10.	Для каждой команды вывести имена игроков, которые забивали голы через запятую. Если никто не забивал – пустую строку.
+#10. Для каждой команды вывести имена игроков, которые забивали голы через запятую. Если никто не забивал – пустую строку.
