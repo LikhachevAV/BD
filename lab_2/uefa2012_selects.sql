@@ -41,6 +41,10 @@ SELECT player FROM goal
 WHERE stadium LIKE("Stadion Narodowy, Warsaw%");
 
 #7.	Найти имена всех игроков, которые забили гол в ворота Германии
+SELECT player FROM goal
+  LEFT JOIN game ON goal.match_id = game.match_id 
+  WHERE goal.team_id != 7 AND (game.team1 = 7 OR game.team2 = 7)
+    GROUP BY player;
 #8.	Найти общее количество забитых мячей для каждой команды (с указанием имени команды)
 #9.	Найти количество мячей, забитых на каждом стадионе с указанием названия стадиона
 #10. Для каждой команды вывести имена игроков, которые забивали голы через запятую. Если никто не забивал – пустую строку.
