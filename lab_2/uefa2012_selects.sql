@@ -13,8 +13,7 @@ SELECT goal.player, team.team_id, game.stadium, game.match_date
     ON goal.team_id = team.team_id) INNER JOIN 
     game ON (game.team1 = goal.team_id OR 
       game.team2 = goal.team_id)
-  WHERE team.team_code="GER"
-  GROUP BY goal.player;
+  WHERE team.team_code="GER" ORDER BY player, match_date;
 
 #3
 # Найти названия команд для всех встреч, в которых забивал игрок с именем Mario
@@ -25,6 +24,10 @@ FROM game LEFT JOIN team ON game.team1 = team.team_id
 WHERE goal.player LIKE("Mario%");
 
 #4.	Найти имя игрока, идентификатор команды, тренера и минуту, на которой был забит гол из всех голов, которые были забиты в первые 10 минут матча.
+SELECT goal.player, team.team_id, team.coach, goal.match_time FROM goal
+  LEFT JOIN team ON goal.team_id = team.team_id
+  WHERE match_time <= 10 ORDER BY goal.match_time;
+  
 #5.	Перечислить все даты матчей и названия команд, в которых FernandoSantosбыл тренерому одной из команд
 #6.	Перечислить всех игроков, которые забивали голы на стадионе «NationalStadium, Warsaw»
 #7.	Найти имена всех игроков, которые забили гол в ворота Германии
