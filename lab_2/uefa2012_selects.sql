@@ -36,6 +36,10 @@ WHERE team_f.coach = "Fernando Santos" OR team_s.coach = "Fernando Santos"
 ORDER BY match_date;
 
 #6.	Перечислить всех игроков, которые забивали голы на стадионе «NationalStadium, Warsaw»
+SELECT player FROM goal
+  LEFT JOIN game ON goal.match_id = game.match_id
+WHERE stadium LIKE("Stadion Narodowy, Warsaw%");
+
 #7.	Найти имена всех игроков, которые забили гол в ворота Германии
 #8.	Найти общее количество забитых мячей для каждой команды (с указанием имени команды)
 #9.	Найти количество мячей, забитых на каждом стадионе с указанием названия стадиона
