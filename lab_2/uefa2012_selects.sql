@@ -60,3 +60,7 @@ SELECT stadium, COUNT(*) AS goal_count FROM goal
 GROUP BY stadium ORDER BY goal_count;
 
 #10. Для каждой команды вывести имена игроков, которые забивали голы через запятую. Если никто не забивал – пустую строку.
+SELECT team_name, GROUP_CONCAT(DISTINCT  ' ', player ORDER BY player) AS goal_players 
+  FROM goal LEFT JOIN team ON goal.team_id = team.team_id
+GROUP BY goal.team_id
+ORDER BY team_name;
