@@ -55,4 +55,8 @@ SELECT team.team_name, COUNT(*) AS goal_count FROM goal
 GROUP BY team.team_id ORDER BY goal_count;
 
 #9.	Найти количество мячей, забитых на каждом стадионе с указанием названия стадиона
+SELECT stadium, COUNT(*) AS goal_count FROM goal 
+  LEFT JOIN game ON goal.match_id = game.match_id 
+GROUP BY stadium ORDER BY goal_count;
+
 #10. Для каждой команды вывести имена игроков, которые забивали голы через запятую. Если никто не забивал – пустую строку.
