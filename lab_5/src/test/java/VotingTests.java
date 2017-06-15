@@ -62,4 +62,19 @@ public class VotingTests {
         voting.addPerson(person2);
         Assert.assertTrue(voting.getPersonVote(person2) == 0);
     }
+
+    @Test
+    public void addPersonAndVoteItInCycleTestMethodTest() {
+        Voting voting = new Voting();
+        String person = "Person with 3 vote";
+        addPersonAndVoteItInCycle(voting, person, 3);
+        Assert.assertTrue(voting.getPersonVote(person) == 3);
+    }
+
+    private void addPersonAndVoteItInCycle(Voting voting, String person, int voteCount) {
+        voting.addPerson(person);
+        for (int i = 0; i < voteCount; i++) {
+            voting.incrVote(person);
+        }
+    }
 }
