@@ -1,4 +1,5 @@
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import ru.artem.redistest.Voting;
@@ -7,7 +8,8 @@ import ru.artem.redistest.Voting;
  * Created by artem.lihachev on 15.06.2017.
  */
 public class VotingTests2 {
-    @BeforeTest
+
+    @BeforeMethod
     public void deleteAllBdKeys() {
         new Voting().clearAllPersons();
     }
@@ -17,7 +19,7 @@ public class VotingTests2 {
         Voting voting = new Voting();
         String person = "Igor";
         voting.hAddPerson(person);
-        Assert.assertEquals(voting.hGetPersonVote(person), "0");
+        Assert.assertTrue(voting.hGetPersonVote(person) == 0);
     }
 
     @Test
