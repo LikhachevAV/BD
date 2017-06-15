@@ -17,7 +17,7 @@ public class Voting {
 
     //Добавить нового участника
     public void addPerson(String person) {
-        if (!jedis.get(person).equals(null)) {
+        if (!jedis.get(person).isEmpty()) {
             throw new UnsupportedOperationException();
         }
         jedis.set(person, "0");
@@ -62,6 +62,12 @@ public class Voting {
 
     //Получить список всех участников, отсортированных по количеству голосов
     public List<String> getSortedPersons() {
+        System.out.println(jedis.hgetAll("Andrey"));
+        System.out.println(jedis.randomKey());
         return null;
+    }
+
+    public void clearAllPersons() {
+        jedis.flushDB();
     }
 }

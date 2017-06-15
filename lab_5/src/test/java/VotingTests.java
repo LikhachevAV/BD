@@ -1,5 +1,5 @@
 import org.testng.Assert;
-import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import ru.artem.redistest.Voting;
 
@@ -7,6 +7,11 @@ import ru.artem.redistest.Voting;
  * Created by tamerlan on 14.06.2017.
  */
 public class VotingTests {
+
+    @BeforeTest
+    public void deleteAllPersons() {
+        new Voting().clearAllPersons();
+    }
 
     @Test(expectedExceptions = NullPointerException.class)
     public void canAddAndDeletePerson() {
@@ -36,11 +41,5 @@ public class VotingTests {
         Assert.assertTrue(voting.getPersonVote(person2) == 1, voting.getPersonVote(person2) + "==1");
         voting.deletePerson(person1);
         voting.deletePerson(person2);
-    }
-
-    @AfterTest
-    public void deleteAllPersons() {
-        Voting voting = new Voting();
-        //voting.get
     }
 }
