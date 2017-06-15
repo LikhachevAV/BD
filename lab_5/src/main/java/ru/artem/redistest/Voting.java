@@ -9,6 +9,7 @@ import java.util.List;
  */
 public class Voting {
     private Jedis jedis = null;
+    private static final String BD_KEY = "persons";
 
     public Voting() {
         jedis = new Jedis(ConnectionSettings.host, ConnectionSettings.port);
@@ -16,8 +17,24 @@ public class Voting {
     }
 
     //Добавить нового участника
+    public void hAddPerson(String person) {
+       /* if (!jedis.hget(BD_KEY, person).equals(null)) {
+            throw new UnsupportedOperationException();
+        }*/
+        try {
+            if (!jedis.hget(BD_KEY, person).equals(null)) {
+                throw new UnsupportedOperationException();
+            }
+
+        } catch (NullPointerException e) {
+        }
+        jedis.hset(BD_KEY, person, "0");
+    }
+
+    //Добавить нового участника
+
     public void addPerson(String person) {
-        if (!jedis.get(person).equals(null)) {
+        if (!jedis.get(person).isEmpty()) {
             throw new UnsupportedOperationException();
         }
         jedis.set(person, "0");
@@ -62,6 +79,47 @@ public class Voting {
 
     //Получить список всех участников, отсортированных по количеству голосов
     public List<String> getSortedPersons() {
+        System.out.println(jedis.hgetAll("Andrey"));
+        System.out.println(jedis.randomKey());
         return null;
+    }
+
+    public void clearAllPersons() {
+        jedis.flushDB();
+    }
+
+    public void tmp() {
+        jedis.hset("persons", "Oleg", "7");
+        System.out.println(jedis.hgetAll("persons"));
+        //System.out.println(jedis.get("all"));
+    }
+
+    public Integer hGetPersonVote(String person) {
+        try {
+        return Integer.valueOf(jedis.hget(BD_KEY, person));} catch (NumberFormatException e) {
+            throw new NullPointerException();
+        }
+    }
+
+    public void hIncrVote(String person) {
+        Integer voteValue = hGetPersonVote(person);
+        if (voteValue.equals(null)) {
+            throw new NullPointerException();
+        }
+        voteValue++;
+        jedis.hset(BD_KEY, person, voteValue.toString());
+    }
+
+    public void hDelPerson(String person) {
+        jedis.hdel(BD_KEY, person);
+    }
+
+    public void hDecrVote(String person) {
+        Integer voteValue = hGetPersonVote(person);
+        if (voteValue.equals(null)) {
+            throw new NullPointerException();
+        }
+        voteValue--;
+        jedis.hset(BD_KEY, person, voteValue.toString());
     }
 }
