@@ -17,10 +17,7 @@ public class Voting {
     }
 
     //Добавить нового участника
-    public void hAddPerson(String person) {
-       /* if (!jedis.hget(BD_KEY, person).equals(null)) {
-            throw new UnsupportedOperationException();
-        }*/
+    public void addPerson(String person) {
         try {
             if (!jedis.hget(BD_KEY, person).equals(null)) {
                 throw new UnsupportedOperationException();
@@ -31,56 +28,9 @@ public class Voting {
         jedis.hset(BD_KEY, person, "0");
     }
 
-    //Добавить нового участника
-
-    public void addPerson(String person) {
-        if (!jedis.get(person).isEmpty()) {
-            throw new UnsupportedOperationException();
-        }
-        jedis.set(person, "0");
-    }
-
-    //Удалить участника
-    public void deletePerson(String person) {
-        if (jedis.del(person) == 0) {
-            throw new NullPointerException();
-        }
-    }
-
-    //Добавить голос
-    public void increaseVote(String person) {
-        Integer voteValue = getPersonVote(person);
-        if (voteValue.equals(null)) {
-            throw new NullPointerException();
-        }
-        voteValue++;
-        jedis.set(person, voteValue.toString());
-    }
-
-    //Отобрать голос
-    public void decreaseVote(String person) {
-        Integer voteValue = getPersonVote(person);
-        if (voteValue.equals(null)) {
-            throw new NullPointerException();
-        }
-        voteValue--;
-        jedis.set(person, voteValue.toString());
-    }
-
-    // Получить количество голосов участника
-    public Integer getPersonVote(String person) {
-        try {
-            String result = jedis.get(person);
-            return Integer.valueOf(result);
-        } catch (NumberFormatException e) {
-            throw new NullPointerException();
-        }
-    }
-
     //Получить список всех участников, отсортированных по количеству голосов
     public List<String> getSortedPersons() {
-        System.out.println(jedis.hgetAll("Andrey"));
-        System.out.println(jedis.randomKey());
+        //TODO
         return null;
     }
 
@@ -88,21 +38,16 @@ public class Voting {
         jedis.flushDB();
     }
 
-    public void tmp() {
-        jedis.hset("persons", "Oleg", "7");
-        System.out.println(jedis.hgetAll("persons"));
-        //System.out.println(jedis.get("all"));
-    }
-
-    public Integer hGetPersonVote(String person) {
+    public Integer getPersonVote(String person) {
         try {
-        return Integer.valueOf(jedis.hget(BD_KEY, person));} catch (NumberFormatException e) {
+            return Integer.valueOf(jedis.hget(BD_KEY, person));
+        } catch (NumberFormatException e) {
             throw new NullPointerException();
         }
     }
 
-    public void hIncrVote(String person) {
-        Integer voteValue = hGetPersonVote(person);
+    public void incrVote(String person) {
+        Integer voteValue = getPersonVote(person);
         if (voteValue.equals(null)) {
             throw new NullPointerException();
         }
@@ -110,12 +55,12 @@ public class Voting {
         jedis.hset(BD_KEY, person, voteValue.toString());
     }
 
-    public void hDelPerson(String person) {
+    public void delPerson(String person) {
         jedis.hdel(BD_KEY, person);
     }
 
-    public void hDecrVote(String person) {
-        Integer voteValue = hGetPersonVote(person);
+    public void decrVote(String person) {
+        Integer voteValue = getPersonVote(person);
         if (voteValue.equals(null)) {
             throw new NullPointerException();
         }
