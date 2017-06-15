@@ -1,5 +1,4 @@
 import org.testng.Assert;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 import ru.artem.redistest.Voting;
 
@@ -8,10 +7,10 @@ import ru.artem.redistest.Voting;
  */
 public class VotingTests {
 
-    @BeforeTest
+ /*   @BeforeTest
     public void deleteAllPersons() {
         new Voting().clearAllPersons();
-    }
+    }*/
 
     @Test(expectedExceptions = NullPointerException.class)
     public void canAddAndDeletePerson() {
