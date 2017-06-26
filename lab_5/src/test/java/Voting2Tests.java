@@ -1,4 +1,5 @@
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.artem.redistest.Voting2;
 
@@ -9,6 +10,11 @@ public class Voting2Tests {
 
     static final String personName = "Ivan";
     Voting2 voting = new Voting2();
+
+    @BeforeMethod
+    public void deleteAllPersons() {
+        voting.deleteAllPersons();
+    }
 
     @Test
     public void canAddPerson() {
@@ -27,5 +33,10 @@ public class Voting2Tests {
         canAddPerson();
         voting.delPerson(personName);
         Assert.assertFalse(voting.havePerson(personName));
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void canNotGetScoreWhenPersonNotExists() {
+        voting.getPersonScore(personName);
     }
 }

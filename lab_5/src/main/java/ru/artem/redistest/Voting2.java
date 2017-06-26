@@ -15,19 +15,20 @@ public class Voting2 {
     }
 
     //Добавить нового участника
-    public void addPerson(String person) {
+    public void addPerson(String person) throws UnsupportedOperationException {
         if (havePerson(person)) {
-            throw new UnsupportedOperationException("Can not add person [" + person + "], " +
-                    "because it is already exists!");
+            throw new UnsupportedOperationException("Person [" + person + "] already exists!");
         }
         jedis.sadd(BD_KEY, person);
         jedis.hset(person, SCORE, "0");
     }
 
-    public int getPersonScore(String person) {
+    public int getPersonScore(String person) throws NullPointerException {
+        if (!havePerson(person)) {
+            throw new NullPointerException("Person [" + person + "] not exists");
+        }
         String score = jedis.hget(person, SCORE);
         return Integer.valueOf(score);
-        //TODO: throw exception, if person not exists
     }
 
     public void delPerson(String person) {
@@ -37,5 +38,9 @@ public class Voting2 {
 
     public boolean havePerson(String person) {
         return jedis.sismember(BD_KEY, person);
+    }
+
+    public void deleteAllPersons() {
+        jedis.del(BD_KEY);
     }
 }
