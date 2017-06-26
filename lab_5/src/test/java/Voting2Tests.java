@@ -44,4 +44,28 @@ public class Voting2Tests {
     public void canNotGetScoreWhenPersonNotExists() {
         voting.getPersonScore(personName);
     }
+
+    @Test
+    public void canIncrScore() {
+        canAddPerson();
+        voting.incrScore(personName);
+        Assert.assertTrue(voting.getPersonScore(personName) == 1);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void canNotIncrScoreWhenPersonNotExists() {
+        voting.incrScore(personName);
+    }
+
+    @Test
+    public void canDecrScore() {
+        canIncrScore();
+        voting.decrScore(personName);
+        Assert.assertTrue(voting.getPersonScore(personName) == 0);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void canNotDecrScoreWhenPersonNotExists() {
+        voting.decrScore(personName);
+    }
 }

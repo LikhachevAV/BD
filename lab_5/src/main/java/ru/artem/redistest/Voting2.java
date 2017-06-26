@@ -45,4 +45,16 @@ public class Voting2 {
     public void delAllPersons() {
         jedis.del(BD_KEY);
     }
+
+    public void incrScore(String person) throws NullPointerException{
+        int score = getPersonScore(person);
+        ++score;
+        jedis.hset(person, SCORE, String.valueOf(score));
+    }
+
+    public void decrScore(String person) throws NullPointerException{
+        int score = getPersonScore(person);
+        --score;
+        jedis.hset(person, SCORE, String.valueOf(score));
+    }
 }
