@@ -67,11 +67,26 @@ public class VotingTests {
     public void addPersonAndVoteItInCycleTestMethodTest() {
         Voting voting = new Voting();
         String person = "Person with 3 vote";
-        addPersonAndVoteItInCycle(voting, person, 3);
+        addPersonVotes(voting, person, 3);
         Assert.assertTrue(voting.getPersonVote(person) == 3);
     }
 
-    private void addPersonAndVoteItInCycle(Voting voting, String person, int voteCount) {
+    @Test
+    public void sortPersonsTest() {
+        Voting voting = new Voting();
+        String person1 = "Oleg";
+        addPersonVotes(voting, person1, 1);
+        Assert.assertTrue(voting.getPersonVote(person1) == 1);
+        String person2 = "Zoya";
+        addPersonVotes(voting, person2, 5);
+        Assert.assertTrue(voting.getPersonVote(person2) == 5);
+        String person3 = "Andrey";
+        addPersonVotes(voting, person3, 7);
+        Assert.assertTrue(voting.getPersonVote(person3) == 7);
+        System.out.println(voting.getSortedPersons());
+    }
+
+    private void addPersonVotes(Voting voting, String person, int voteCount) {
         voting.addPerson(person);
         for (int i = 0; i < voteCount; i++) {
             voting.incrVote(person);
