@@ -1,70 +1,73 @@
 package ru.artem.redistest;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.SortingParams;
 
 import java.util.List;
 
 /**
- * Created by tamerlan on 14.06.2017.
+ * Created by artem.lihachev on 23.06.2017.
  */
 public class Voting {
     private Jedis jedis = null;
     private static final String BD_KEY = "persons";
+    private static final String SCORE = "score";
 
     public Voting() {
         jedis = new Jedis(ConnectionSettings.host, ConnectionSettings.port);
-
     }
 
-    //Добавить нового участника
-    public void addPerson(String person) {
-        try {
-            if (!jedis.hget(BD_KEY, person).equals(null)) {
-                throw new UnsupportedOperationException();
-            }
-
-        } catch (NullPointerException e) {
+    public void addPerson(String person) throws UnsupportedOperationException {
+        if (havePerson(person)) {
+            throw new UnsupportedOperationException("Person [" + person + "] already exists!");
         }
-        jedis.hset(BD_KEY, person, "0");
+        jedis.sadd(BD_KEY, person);
+        jedis.hset(person, SCORE, "0");
     }
 
-    //Получить список всех участников, отсортированных по количеству голосов
-    public List<String> getSortedPersons() {
-        //TODO
-        return null;
-    }
-
-    public void clearAllPersons() {
-        jedis.flushDB();
-    }
-
-    public Integer getPersonVote(String person) {
-        try {
-            return Integer.valueOf(jedis.hget(BD_KEY, person));
-        } catch (NumberFormatException e) {
-            throw new NullPointerException();
+    public int getPersonScore(String person) throws NullPointerException {
+        if (!havePerson(person)) {
+            throw new NullPointerException("Person [" + person + "] not exists");
         }
+        String score = jedis.hget(person, SCORE);
+        return Integer.valueOf(score);
     }
 
-    public void incrVote(String person) {
-        Integer voteValue = getPersonVote(person);
-        if (voteValue.equals(null)) {
-            throw new NullPointerException();
+    public void delPerson(String person) throws NullPointerException {
+        if (!havePerson(person)) {
+            throw new NullPointerException("Person [" + person + "] not exists");
         }
-        voteValue++;
-        jedis.hset(BD_KEY, person, voteValue.toString());
+        jedis.del(BD_KEY, person);
     }
 
-    public void delPerson(String person) {
-        jedis.hdel(BD_KEY, person);
+    public boolean havePerson(String person) {
+        return jedis.sismember(BD_KEY, person);
     }
 
-    public void decrVote(String person) {
-        Integer voteValue = getPersonVote(person);
-        if (voteValue.equals(null)) {
-            throw new NullPointerException();
+    public void delAllPersons() {
+        jedis.del(BD_KEY);
+    }
+
+    public void incrScore(String person) throws NullPointerException {
+        int score = getPersonScore(person);
+        ++score;
+        jedis.hset(person, SCORE, String.valueOf(score));
+    }
+
+    public void decrScore(String person) throws NullPointerException {
+        int score = getPersonScore(person);
+        --score;
+        jedis.hset(person, SCORE, String.valueOf(score));
+    }
+
+    public List<String> getSortdPersons() throws NullPointerException {
+        if (!havePersons()) {
+            throw new NullPointerException("Can not sort empty persons set!");
         }
-        voteValue--;
-        jedis.hset(BD_KEY, person, voteValue.toString());
+        return jedis.sort(BD_KEY, new SortingParams().by("by *-> " + SCORE));
+    }
+
+    private boolean havePersons() {
+        return !jedis.smembers(BD_KEY).isEmpty();
     }
 }

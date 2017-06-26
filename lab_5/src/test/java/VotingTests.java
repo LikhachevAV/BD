@@ -3,93 +3,99 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ru.artem.redistest.Voting;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by artem.lihachev on 15.06.2017.
+ * Created by artem.lihachev on 26.06.2017.
  */
 public class VotingTests {
 
+    static final String firstPerson = "Ivan";
+    static final String secondPerson = "Anna";
+    Voting voting = new Voting();
+
     @BeforeMethod
-    public void deleteAllBdKeys() {
-        new Voting().clearAllPersons();
+    public void deleteAllPersons() {
+        voting.delAllPersons();
     }
 
     @Test
-    public void addPerson() {
-        Voting voting = new Voting();
-        String person = "Igor";
-        voting.addPerson(person);
-        Assert.assertTrue(voting.getPersonVote(person) == 0);
+    public void canAddPerson() {
+        voting.addPerson(firstPerson);
+        Assert.assertTrue(voting.getPersonScore(firstPerson) == 0);
+    }
+
+    @Test(expectedExceptions = UnsupportedOperationException.class)
+    public void canNotAddPersonWhetItIsAlreadyExists() {
+        canAddPerson();
+        voting.addPerson(firstPerson);
     }
 
     @Test
-    public void incrVoteTest() {
-        Voting voting = new Voting();
-        String person = "Igor";
-        voting.addPerson(person);
-        Assert.assertTrue(voting.getPersonVote(person) == 0);
-        voting.incrVote(person);
-        Assert.assertTrue(voting.getPersonVote(person) == 1);
-    }
-
-    @Test
-    public void decrVoteTest() {
-        Voting voting = new Voting();
-        String person = "Igor";
-        voting.addPerson(person);
-        Assert.assertTrue(voting.getPersonVote(person) == 0);
-        voting.incrVote(person);
-        Assert.assertTrue(voting.getPersonVote(person) == 1);
-        voting.decrVote(person);
-        Assert.assertTrue(voting.getPersonVote(person) == 0);
+    public void canDeletePerson() {
+        canAddPerson();
+        voting.delPerson(firstPerson);
+        Assert.assertFalse(voting.havePerson(firstPerson));
     }
 
     @Test(expectedExceptions = NullPointerException.class)
-    public void delPersonTest() {
-        String person = "Deletable";
-        Voting voting = new Voting();
-        voting.addPerson(person);
-        voting.delPerson(person);
-        Assert.assertTrue(voting.getPersonVote(person) == -1);
+    public void canNotDeletePersonWhenItIsNotExists() {
+        voting.delPerson(firstPerson);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void canNotGetScoreWhenPersonNotExists() {
+        voting.getPersonScore(firstPerson);
     }
 
     @Test
-    public void addTwoPersonTest() {
-        Voting voting = new Voting();
-        String person1 = "first";
-        String person2 = "second";
-        voting.addPerson(person1);
-        Assert.assertTrue(voting.getPersonVote(person1) == 0);
-        voting.addPerson(person2);
-        Assert.assertTrue(voting.getPersonVote(person2) == 0);
+    public void canIncrScore() {
+        canAddPerson();
+        voting.incrScore(firstPerson);
+        Assert.assertTrue(voting.getPersonScore(firstPerson) == 1);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void canNotIncrScoreWhenPersonNotExists() {
+        voting.incrScore(firstPerson);
     }
 
     @Test
-    public void addPersonAndVoteItInCycleTestMethodTest() {
-        Voting voting = new Voting();
-        String person = "Person with 3 vote";
-        addPersonVotes(voting, person, 3);
-        Assert.assertTrue(voting.getPersonVote(person) == 3);
+    public void canDecrScore() {
+        canIncrScore();
+        voting.decrScore(firstPerson);
+        Assert.assertTrue(voting.getPersonScore(firstPerson) == 0);
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void canNotDecrScoreWhenPersonNotExists() {
+        voting.decrScore(firstPerson);
     }
 
     @Test
-    public void sortPersonsTest() {
-        Voting voting = new Voting();
-        String person1 = "Oleg";
-        addPersonVotes(voting, person1, 1);
-        Assert.assertTrue(voting.getPersonVote(person1) == 1);
-        String person2 = "Zoya";
-        addPersonVotes(voting, person2, 5);
-        Assert.assertTrue(voting.getPersonVote(person2) == 5);
-        String person3 = "Andrey";
-        addPersonVotes(voting, person3, 7);
-        Assert.assertTrue(voting.getPersonVote(person3) == 7);
-        System.out.println(voting.getSortedPersons());
+    public void canSortPersonsByScore() {
+        List<String> persons = new ArrayList<>();
+        persons.add(secondPerson);
+        persons.add(firstPerson);
+        voting.addPerson(firstPerson);
+        voting.addPerson(secondPerson);
+        voting.incrScore(secondPerson);
+        List<String> sortedByScorePersons = voting.getSortdPersons();
+        Assert.assertEquals(persons, sortedByScorePersons);
     }
 
-    private void addPersonVotes(Voting voting, String person, int voteCount) {
-        voting.addPerson(person);
-        for (int i = 0; i < voteCount; i++) {
-            voting.incrVote(person);
+    @Test(expectedExceptions = NullPointerException.class)
+    public void canNotSortEmptyPersonsSet() {
+        voting.getSortdPersons();
+    }
+
+    @Test
+    public void printSortedPersons() {
+        canSortPersonsByScore();
+        List<String> sortedByScorePersons = voting.getSortdPersons();
+        for (String person: sortedByScorePersons) {
+            System.out.println("person: " + person + " with score: " + voting.getPersonScore(person));
         }
     }
 }
