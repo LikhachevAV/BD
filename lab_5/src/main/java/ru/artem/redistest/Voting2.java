@@ -1,6 +1,9 @@
 package ru.artem.redistest;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.SortingParams;
+
+import java.util.List;
 
 /**
  * Created by artem.lihachev on 23.06.2017.
@@ -46,15 +49,26 @@ public class Voting2 {
         jedis.del(BD_KEY);
     }
 
-    public void incrScore(String person) throws NullPointerException{
+    public void incrScore(String person) throws NullPointerException {
         int score = getPersonScore(person);
         ++score;
         jedis.hset(person, SCORE, String.valueOf(score));
     }
 
-    public void decrScore(String person) throws NullPointerException{
+    public void decrScore(String person) throws NullPointerException {
         int score = getPersonScore(person);
         --score;
         jedis.hset(person, SCORE, String.valueOf(score));
+    }
+
+    public List<String> getSortdPersons() throws NullPointerException{
+        if (!havePersons()) {
+            throw new NullPointerException("Can not sort empty persons set!");
+        }
+        return jedis.sort(BD_KEY, new SortingParams().by("by *-> " + SCORE));
+    }
+
+    private boolean havePersons() {
+        return !jedis.smembers(BD_KEY).isEmpty();
     }
 }
