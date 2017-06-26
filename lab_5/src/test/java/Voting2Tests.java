@@ -13,7 +13,7 @@ public class Voting2Tests {
 
     @BeforeMethod
     public void deleteAllPersons() {
-        voting.deleteAllPersons();
+        voting.delAllPersons();
     }
 
     @Test
@@ -33,6 +33,11 @@ public class Voting2Tests {
         canAddPerson();
         voting.delPerson(personName);
         Assert.assertFalse(voting.havePerson(personName));
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void canNotDeletePersonWhenItIsNotExists() {
+        voting.delPerson(personName);
     }
 
     @Test(expectedExceptions = NullPointerException.class)

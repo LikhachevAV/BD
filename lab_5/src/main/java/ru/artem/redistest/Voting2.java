@@ -31,16 +31,18 @@ public class Voting2 {
         return Integer.valueOf(score);
     }
 
-    public void delPerson(String person) {
+    public void delPerson(String person) throws NullPointerException {
+        if (!havePerson(person)) {
+            throw new NullPointerException("Person [" + person + "] not exists");
+        }
         jedis.del(BD_KEY, person);
-        //TODO: throw exception, if person not exists
     }
 
     public boolean havePerson(String person) {
         return jedis.sismember(BD_KEY, person);
     }
 
-    public void deleteAllPersons() {
+    public void delAllPersons() {
         jedis.del(BD_KEY);
     }
 }
