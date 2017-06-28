@@ -1,7 +1,7 @@
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import ru.artem.redistest.Voting;
+import ru.artem.redistest.helpers.Voting;
 
 import java.util.ArrayList;
 import java.util.List;

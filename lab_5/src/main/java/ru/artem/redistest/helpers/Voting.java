@@ -1,4 +1,4 @@
-package ru.artem.redistest;
+package ru.artem.redistest.helpers;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.SortingParams;

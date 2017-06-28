@@ -1,4 +1,4 @@
-package ru.artem.redistest;
+package ru.artem.redistest.helpers;
 
 /**
  * Created by tamerlan on 14.06.2017.
