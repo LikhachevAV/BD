@@ -1,4 +1,4 @@
-package sru.artem.redistest.servlet;
+package ru.artem.redistest.servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

@@ -75,7 +75,7 @@ public class VotingTests {
 
     @Test
     public void canSortPersonsByScore() {
-        List<String> persons = new ArrayList<>();
+        List<String> persons = new ArrayList<String>();
         persons.add(secondPerson);
         persons.add(firstPerson);
         voting.addPerson(firstPerson);
