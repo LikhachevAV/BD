@@ -20,10 +20,14 @@ public class VotingTests {
         voting.delAllPersons();
     }
 
+    public void canAddPerson(String name) {
+        voting.addPerson(name);
+        Assert.assertTrue(voting.getPersonScore(name) == 0);
+    }
+
     @Test
     public void canAddPerson() {
-        voting.addPerson(firstPerson);
-        Assert.assertTrue(voting.getPersonScore(firstPerson) == 0);
+       canAddPerson(firstPerson);
     }
 
     @Test(expectedExceptions = UnsupportedOperationException.class)
@@ -37,6 +41,15 @@ public class VotingTests {
         canAddPerson();
         voting.delPerson(firstPerson);
         Assert.assertFalse(voting.havePerson(firstPerson));
+    }
+
+    @Test
+    public void deleteJustOnePerson() {
+        canAddPerson();
+        canAddPerson(secondPerson);
+        voting.delPerson(secondPerson);
+        Assert.assertFalse(voting.havePerson(secondPerson));
+        Assert.assertTrue(voting.havePerson(firstPerson));
     }
 
     @Test(expectedExceptions = NullPointerException.class)

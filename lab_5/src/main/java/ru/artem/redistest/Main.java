@@ -41,7 +41,7 @@ public class Main {
     }
 
     private static String getCommandValue(String input, Commands command) {
-        return input.trim().toLowerCase().replaceFirst(command.toString().toLowerCase(), "");
+        return input.trim().toLowerCase().replaceFirst(command.toString().toLowerCase(), "").trim();
     }
 
     private static String getVotingResults(Voting voting) {
@@ -76,6 +76,9 @@ public class Main {
                     break;
                 case AddPerson:
                     voting.addPerson(getCommandValue(s, Commands.AddPerson));
+                    break;
+                case DelPerson:
+                    voting.delPerson(getCommandValue(s, Commands.DelPerson));
                     break;
                 case ShowPersons:
                     System.out.println(getVotingResults(voting));

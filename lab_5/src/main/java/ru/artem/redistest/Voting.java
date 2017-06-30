@@ -37,7 +37,7 @@ public class Voting {
         if (!havePerson(person)) {
             throw new NullPointerException("Person [" + person + "] not exists");
         }
-        jedis.del(BD_KEY, person);
+        jedis.srem(BD_KEY, person);
     }
 
     public boolean havePerson(String person) {
