@@ -1,0 +1,15 @@
+UPDATE test_case SET test_case_tested_by_person_id = 4 WHERE test_case_id = 1;
+UPDATE test_case SET test_case_date = "2017-03-01" WHERE test_case_id = 1;
+UPDATE test_case SET test_case_tested_by_person_id = 8 WHERE test_case_id = 2;
+UPDATE test_case SET test_case_date = "2017-03-08" WHERE test_case_id = 2;
+
+Установить новый контакт:
+
+авторизоваться
+перейти на страницу поиска контактов
+ввести данные искомого пользователя в строку поиска
+нажать кнопку поиска
+выбрать пользователя из списка результата пользователя
+нажать кнопку "добавить в контакты"
+перейти в список контактов
+убедиться, что искомый пользователь дбавился в контакты
