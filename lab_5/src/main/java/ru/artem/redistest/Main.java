@@ -14,14 +14,14 @@ public class Main {
             "To show available command list, please enter \"help\" command!\n";
     private static final String helpMessage = "Voting system command list:\n" +
             "help - show voting system command list" +
-            "addPerson <Person> - add new person in voting system;\n" +
-            "delPerson <Person> - delete person with name <Person> from voting system\n" +
-            "incrScore <Person> - add one score for person with name <Person>\n" +
-            "decrScore <Person> - sub one score for person with name <Person>\n" +
-            "showPersons - print sorted persons list by score value\n" +
+            "add <Person> - add new person in voting system;\n" +
+            "del <Person> - delete person with name <Person> from voting system\n" +
+            "incr <Person> - add one score for person with name <Person>\n" +
+            "decr <Person> - sub one score for person with name <Person>\n" +
+            "show - print sorted persons list by score value\n" +
             "exit - exit voting system\n";
 
-    enum Commands {NoCommand, Help, AddPerson, DelPerson, IncrScore, DecrScore, ShowPersons, Exit}
+    enum Commands {nocommand, help, add, del, incr, decr, show, exit}
 
     /*
     Добавить нового участника
@@ -33,15 +33,15 @@ public class Main {
 
     private static Commands getCommand(String input) {
         for (Commands command : Commands.values()) {
-            if (input.trim().toLowerCase().startsWith(command.toString().toLowerCase())) {
+            if (input.trim().startsWith(command.toString())) {
                 return command;
             }
         }
-        return Commands.NoCommand;
+        return Commands.nocommand;
     }
 
     private static String getCommandValue(String input, Commands command) {
-        return input.trim().toLowerCase().replaceFirst(command.toString().toLowerCase(), "").trim();
+        return input.trim().replaceFirst(command.toString(), "").trim();
     }
 
     private static String getVotingResults(Voting voting) {
@@ -54,7 +54,6 @@ public class Main {
                 result += "\n";
             }
         }
-
         return result;
     }
 
@@ -65,27 +64,39 @@ public class Main {
         do {
             System.out.print("Please, enter command: ");
             s = br.readLine();
-            switch (getCommand(s)) {
-                case Exit:
-                    return;
-                case NoCommand:
-                    System.out.println(unknownCommandMessage);
-                    break;
-                case Help:
-                    System.out.println(helpMessage);
-                    break;
-                case AddPerson:
-                    voting.addPerson(getCommandValue(s, Commands.AddPerson));
-                    break;
-                case DelPerson:
-                    voting.delPerson(getCommandValue(s, Commands.DelPerson));
-                    break;
-                case ShowPersons:
-                    System.out.println(getVotingResults(voting));
-                    break;
-                default:
-                    System.out.println(unknownCommandMessage);
-                    break;
+            try {
+                switch (getCommand(s)) {
+                    case exit:
+                        return;
+                    case nocommand:
+                        System.out.println(unknownCommandMessage);
+                        break;
+                    case help:
+                        System.out.println(helpMessage);
+                        break;
+                    case add:
+                        voting.addPerson(getCommandValue(s, Commands.add));
+                        break;
+                    case del:
+                        voting.delPerson(getCommandValue(s, Commands.del));
+                        break;
+                    case show:
+                        System.out.println(getVotingResults(voting));
+                        break;
+                    case incr:
+                        voting.incrScore(getCommandValue(s, Commands.incr));
+                        break;
+                    case decr:
+                        voting.decrScore(getCommandValue(s, Commands.decr));
+                        break;
+                    default:
+                        System.out.println(unknownCommandMessage);
+                        break;
+                }
+            } catch (UnsupportedOperationException e) {
+                System.out.println(e.getMessage());
+            } catch (NullPointerException e) {
+                System.out.println(e.getMessage());
             }
         } while (true);
     }

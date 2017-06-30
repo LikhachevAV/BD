@@ -64,7 +64,7 @@ public class Voting {
         if (!havePersons()) {
             throw new NullPointerException("Can not sort empty persons set!");
         }
-        return jedis.sort(BD_KEY, new SortingParams().by("by *-> " + SCORE));
+        return jedis.sort(BD_KEY, new SortingParams().desc().by("*->score"));
     }
 
     private boolean havePersons() {
