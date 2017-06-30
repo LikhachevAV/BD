@@ -48,11 +48,11 @@ CREATE TABLE test_case (
 	test_case_description TEXT,
 	test_case_date DATE,
 	test_case_status ENUM('ok', 'fail', 'skip'),
-	test_caseed_by_person_id BIGINT UNSIGNED,
+	test_case_tested_by_person_id BIGINT UNSIGNED,
 	PRIMARY KEY (test_case_id),
 	FOREIGN KEY (feature_id)
 	  REFERENCES feature (feature_id),
-	FOREIGN KEY (test_caseed_by_person_id)
+	FOREIGN KEY (test_case_tested_by_person_id)
 	  REFERENCES person (person_id)
 	  ON DELETE SET NULL
 );
