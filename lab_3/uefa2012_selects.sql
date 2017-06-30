@@ -68,26 +68,23 @@ ORDER BY team_name;
 #11. Для всех матчей, в которых участвовала Германия, вывести дату матча, название команды-соперника и количество заработанных за матч очков. Количество очков в нашей предметной области считается следующим образом: за один гол даётся два очка, за пропуск мяча – вычитается одно очко.
 
 SELECT
-	game.match_date,
-    team.team_name,
-	SUM( CASE WHEN goal.team_id = (SELECT team.team_id FROM team WHERE team.team_name = "Poland") THEN 2 WHEN goal.team_id != (SELECT team.team_id FROM team WHERE team.team_name = "Poland") THEN -1 ELSE 0 END ) as count
-  FROM
-    game 	
-	INNER JOIN team ON game.team1 = team.team_id
-	INNER JOIN goal ON game.match_id = goal.match_id
-  WHERE
-    game.match_id = goal.match_id
-	AND game.team2 = (SELECT team.team_id FROM team WHERE team.team_name = "Poland")	
+  game.match_date, team.team_name,
+SUM( CASE WHEN goal.team_id = (SELECT team.team_id FROM team WHERE team.team_name = "Poland") THEN 2 WHEN goal.team_id != (SELECT team.team_id FROM team WHERE team.team_name = "Poland") THEN -1 ELSE 0 END ) AS count
+FROM
+  game 	
+INNER JOIN team ON game.team1 = team.team_id
+INNER JOIN goal ON game.match_id = goal.match_id
+WHERE game.match_id = goal.match_id
+  AND game.team2 = (SELECT team.team_id FROM team WHERE team.team_name = "Poland")	
 UNION DISTINCT
-  SELECT
-	game.match_date,
-    team.team_name,
-	SUM( CASE WHEN goal.team_id = (SELECT team.team_id FROM team WHERE team.team_name = "Poland") THEN 2 WHEN goal.team_id != (SELECT team.team_id FROM team WHERE team.team_name = "Poland") THEN -1 ELSE 0 END ) as count
-  FROM
-    game 	
-	INNER JOIN team ON game.team2 = team.team_id
-	INNER JOIN goal ON game.match_id = goal.match_id
-  WHERE
-    game.match_id = goal.match_id
-	AND game.team1 = (SELECT team.team_id FROM team WHERE team.team_name = "Poland")
-GROUP BY game.match_id asc;
+SELECT
+  game.match_date, team.team_name,
+SUM( CASE WHEN goal.team_id = (SELECT team.team_id FROM team WHERE team.team_name = "Poland") THEN 2 WHEN goal.team_id != (SELECT team.team_id FROM team WHERE team.team_name = "Poland") THEN -1 ELSE 0 END ) AS count
+FROM
+  game 	
+INNER JOIN team ON game.team2 = team.team_id
+INNER JOIN goal ON game.match_id = goal.match_id
+WHERE
+  game.match_id = goal.match_id
+  AND game.team1 = (SELECT team.team_id FROM team WHERE team.team_name = "Poland")
+GROUP BY game.match_id ASC;
