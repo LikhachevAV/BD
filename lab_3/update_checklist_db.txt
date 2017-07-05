@@ -13,3 +13,16 @@ UPDATE test_case SET test_case_date = "2017-03-08" WHERE test_case_id = 2;
 нажать кнопку "добавить в контакты"
 перейти в список контактов
 убедиться, что искомый пользователь дбавился в контакты
+
+#3_2.2.
+UPDATE feature SET project_id = 1 WHERE feature_id IN ("1", "2"); ## соц. сеть
+UPDATE feature SET project_id = 2 WHERE feature_id IN (3, 6, 9);## графич. редактор
+
+UPDATE release_version SET project_id = 1 WHERE release_version_version IN (0.3, 0.4);
+UPDATE release_version SET project_id = 2 WHERE release_version_version IN (0.8, 0.9);
+
+UPDATE release_version SET release_version_date = "2016-01-30" WHERE release_version_id = 3;
+UPDATE release_version SET release_version_date = "2016-02-13" WHERE release_version_id = 4;
+
+UPDATE release_version SET release_version_date = "2016-03-06" WHERE release_version_id = 8;
+UPDATE release_version SET release_version_date = "2016-11-14" WHERE release_version_id = 9;
