@@ -4,14 +4,22 @@ SELECT person_surname, person_name, person_fathername
 FROM test_case 
   INNER JOIN person ON person.person_id = test_case.test_case_tested_by_person_id 
 WHERE test_case_date >= "2017-03-01"
+ORDER BY person.person_id;
 
 ##2. Вывести через запятую д. кажд. проекта назввания фич, которые попали в релизы 2016 г.
 
-##
+SELECT project_name,  GROUP_CONCAT(DISTINCT  ' ', feature_name ORDER BY feature.project_id) AS feature_names FROM release_version 
+  INNER JOIN project ON release_version.project_id = project.project_id
+  INNER JOIN feature ON feature.project_id = project.project_id
+WHERE YEAR(release_version_date) = 2016
+GROUP BY project.project_id
+ORDER BY project.project_id;
+
 ##3. Вывести список тест-кейсов, у которых >= 5 шагов по возростанию кол-ва шагов.
 
 SELECT * FROM
 (SELECT test_case_step.test_case_id, test_case.test_case_description, COUNT(test_case_step.test_case_id) AS test_step_count 
 FROM test_case_step INNER JOIN test_case ON test_case.test_case_id = test_case_step.test_case_id
 GROUP BY test_case_step.test_case_id) step_and_count
-WHERE step_and_count.test_step_count >= 5;
+WHERE step_and_count.test_step_count >= 5
+ORDER BY test_case_id;
